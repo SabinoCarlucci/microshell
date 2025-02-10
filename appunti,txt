@@ -1,0 +1,56 @@
+
+🃏 Flashcard: dup2
+📌 Prototipo:
+int dup2(int oldfd, int newfd);
+
+📌 Descrizione:
+dup2 copia il file descriptor oldfd in newfd.
+Se newfd era già aperto, viene chiuso prima di essere sovrascritto.
+Dopo la chiamata, newfd diventa un duplicato di oldfd e può essere usato al suo posto.
+
+📌 Valori di ritorno:
+Successo: ritorna newfd.
+Errore: ritorna -1 e imposta errno.
+
+📌 Esempio di utilizzo:
+dup2(fd[1], 1);  // Redirige stdout (1) nella pipe fd[1] (scrittura)
+
+-----------------
+
+🃏 Flashcard: pipe
+📌 Prototipo:
+int pipe(int fd[2]);
+
+📌 Descrizione:
+pipe crea un canale di comunicazione tra processi.
+fd[0] è il lato di lettura, fd[1] è il lato di scrittura.
+
+📌 Valori di ritorno:
+Successo: ritorna 0.
+Errore: ritorna -1 e imposta errno.
+
+📌 Esempio di utilizzo:
+int fd[2];
+pipe(fd);  // Crea una pipe: fd[0] (lettura), fd[1] (scrittura)
+
+------------------
+
+🃏 Flashcard: fork
+📌 Prototipo:
+pid_t fork(void);
+
+📌 Descrizione:
+fork crea un nuovo processo figlio, che è una copia esatta del padre.
+Dopo fork(), ci sono due processi che eseguono lo stesso codice.
+
+📌 Valori di ritorno:
+Padre: ritorna il PID del figlio (> 0).
+Figlio: ritorna 0.
+Errore: ritorna -1 e imposta errno.
+
+📌 Esempio di utilizzo:
+pid_t pid = fork();
+if (pid == 0)
+    printf("Processo figlio\n");
+else
+    printf("Processo padre\n");
