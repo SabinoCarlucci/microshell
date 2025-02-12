@@ -41,3 +41,7 @@ Don't forget to pass the environment variable to execve
 
 Hints:
 Do not leak file descriptors!
+
+COMANDO PER CONTROLLARE:
+
+valgrind --leak-check=full --show-leak-kinds=all ./a.out /bin/ls "|" /usr/bin/grep microshell ";" /bin/echo i love my microshell

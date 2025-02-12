@@ -1,4 +1,22 @@
 
+🃏 Flashcard: dup
+📌 Prototipo:
+int dup(int oldfd);
+
+📌 Descrizione:
+dup copia il file descriptor oldfd nel file descriptor libero piu' basso.
+Dopo la chiamata, il nuovo filedescriptor diventa un duplicato di oldfd 
+e può essere usato al suo posto.
+
+📌 Valori di ritorno:
+Successo: ritorna newfd.
+Errore: ritorna -1 e imposta errno.
+
+📌 Esempio di utilizzo:
+dup(1);  // Redirige stdout (1) nella pipe fd[1] (scrittura)
+
+-----------------
+
 🃏 Flashcard: dup2
 📌 Prototipo:
 int dup2(int oldfd, int newfd);
@@ -54,3 +72,10 @@ if (pid == 0)
     printf("Processo figlio\n");
 else
     printf("Processo padre\n");
+
+-------------------
+
+execve(programma_da_eseguire, argomenti_del_programma, variabili_ambiente)
+
+dato che argomenti_del_programma e' un array di puntatori che deve essere terminato
+da un puntatore a NULL, ricordati di cambiare l'ultimo argomento dell'array a NULL.

@@ -15,9 +15,9 @@ int	ft_strlen(char *str)
 
 void print_error(char *str, char *arg)
 {
-	write(2, str, strlen(str));
+	write(2, str, ft_strlen(str));
 	if (arg)
-		write(2, arg, strlen(arg));
+		write(2, arg, ft_strlen(arg));
 	write(2, "\n", 1);
 }
 
@@ -25,7 +25,7 @@ int ft_execute(char **argv, int i, int tmp, char **envp)
 {
 	argv[i] = NULL;
 	dup2(tmp, 0);
-	close(tmp);
+	close(tmp);//per evitare leak, perche' tanto tmp adesso e' su 0, cioe' leggendo da 0 in realta' leggiamo da tmp
 	execve(argv[0], argv, envp);
 	print_error("error: cannot execute ", argv[0]);
 	exit(1);
@@ -39,13 +39,16 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 
 	i = 0;
-	tmp = dup(0);
+	tmp = dup(0);//salvo stdin perche' poi lo reindirizzero' quando faccio pipe
 	while(argv[i] && argv[i + 1])
 	{
+		//fai avanzare argomenti
 		argv = &argv[i + 1];
 		i = 0;
+		//scorri argomenti fino a ; o |
 		while (argv[i] && strcmp(argv[i], ";") && strcmp(argv[i], "|"))
 			i++;
+		//se cd allora eseguilo
 		if (strcmp(argv[0], "cd") == 0)
 		{
 			if (i != 2)
@@ -53,6 +56,7 @@ int main(int argc, char **argv, char **envp)
 			else if (chdir(argv[1]) != 0)
 				print_error("error: cd: cannot change directory to ", argv[1]);
 		}
+		//se non e' cd e trovi ;
 		else if (i != 0 && (argv[i] == NULL || strcmp(argv[i], ";") == 0))
 		{
 			if (fork() == 0)
@@ -60,7 +64,7 @@ int main(int argc, char **argv, char **envp)
 			else
 			{
 				close(tmp);
-				while (waitpid(-1, NULL, 2) != -1)
+				while (waitpid(-1, NULL, 2) != -1)//spiegazione dettagliata
 					;
 				tmp = dup(0);
 			}
@@ -68,7 +72,7 @@ int main(int argc, char **argv, char **envp)
 		else if (i != 0 && strcmp(argv[i], "|") == 0)
 		{
 			if (pipe(fd) != 0)
-				print_error("error: fatal", NULL);
+				print_error("error: fatal", NULL);//come viene chiuso il programma in caso di errore?
 			if (fork() == 0)
 			{
 				dup2(fd[1], 1);
@@ -78,9 +82,9 @@ int main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-				close(fd[1]);
-				close(tmp);
-				tmp = fd[0];
+				close(fd[1]);//perche' chiudere se e' gia' chiuso dal figlio?
+				close(tmp);//perche' chiudere tmp? cosa c'era in tmp?
+				tmp = fd[0];//perche' tmp = fd[0] invece di tmp = dup(fd[0])?
 			}
 		}
 	}
