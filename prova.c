@@ -29,7 +29,7 @@ int ft_execute(char **argv, char **envp, int i, int tmp)//viene eseguito tutto s
 	execve(argv[0], argv, envp);
 	//da qui, solo se execve fallisce
 	error("error: cannot execute ", argv[0]);
-	return (1);//per questo funzione e' di tipo int
+	exit(1);//exit, non return
 }
 
 int main(int argc, char **argv, char **envp)
@@ -63,7 +63,7 @@ int main(int argc, char **argv, char **envp)
 		{
 			//fai fork: figlio esegue execve, padre aspetta figlio e rimette tmp = 0
 			if (fork() == 0)
-			ft_execute(argv, envp, i, tmp);
+				ft_execute(argv, envp, i, tmp);
 			else
 			{
 				close(tmp);
