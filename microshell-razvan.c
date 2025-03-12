@@ -17,7 +17,7 @@
 
 void manage_fd(int has_pipe, int fd[2], int end)
 {
-    if (has_pipe && (dup2(fd[end], end) == -1 || close(0) == -1 || close(1) == -1))
+    if (has_pipe && (dup2(fd[end], end) == -1 || close(fd[0]) == -1 || close(fd[1]) == -1))
         write(2, "error: fatal\n", 13), exit(1);
 }
 int ft_cd(char **av, int args)
